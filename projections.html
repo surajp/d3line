@@ -14,13 +14,12 @@
             var dt;
             var width=960,height=500;
             var margin={top:20,right:20,left:40,bottom:20};
-            var x=d3.scaleBand().padding(0.1).range([0,width]);
+            var x=d3.scaleBand().padding(0.1).rangeRound([0,width]);
             var y=d3.scaleLinear().range([0,height]);
-            d3.csv('actuals.csv?id='+Math.random(),(data)=>{
+            d3.csv('projections.csv?id='+Math.random(),(data)=>{
                 x.domain(data.columns);
-                var actualsMax = d3.max(data.columns,(col,i)=>data[0][col]);
-                var projMax = d3.max(data.columns,(col,i)=>data[1][col]);
-                y.domain([d3.max([actualsMax,projMax]),380]);
+                
+                y.domain([d3.max(data.columns,(col,i)=>data[0][col]),380]);
                 var chart = d3.select("#chart")
                               .attr("width",width+margin.left+margin.right)
                               .attr("height",height+margin.top+margin.bottom)
@@ -33,14 +32,12 @@
                      .call(xaxis);
                 chart.append("g").attr("class","y axis")
                      .call(yaxis);
-                var actualsLine = d3.line().curve(d3.curveCatmullRom).y(col=>y(data[0][col])).x(d=>(x(d)+x.bandwidth()/2));
-                var projectionsLine = d3.line().curve(d3.curveCatmullRom).y(col=>y(data[1][col])).x(d=>(x(d)+x.bandwidth()/2));
+                var actualsLine = d3.line().curve(d3.curveCatmullRom).y(col=>y(data[0][col])).x(d=>x(d)+x.bandwidth()/2);
+                
                 chart.append("path").datum(data.columns)
                      .attr("d",actualsLine).attr("fill","none")
                      .attr("stroke","#252984");
-                chart.append("path").datum(data.columns)
-                     .attr("d",projectionsLine).attr("fill","none")
-                     .attr("stroke","#24D2CD");
+              
 
                 var actGroup = chart.selectAll("g.actuals").data(data.columns).enter().append("g").attr("class","actuals");
                 actGroup.append("circle")
@@ -54,23 +51,7 @@
                      .attr("x",d=>x(d)+x.bandwidth()/2)
                      .attr("y",d=>y(data[0][d]))
                      .text((d)=>data[0][d])
-                     .attr("fill","orange")
-                     .attr("dy","-10px")
-                     .style("font-size","12px");
-
-                var projGroup = chart.selectAll("g.projections").data(data.columns).enter().append("g").attr("class","projections");
-                
-                projGroup.append("circle")
-                     .attr("cx",d=>x(d)+x.bandwidth()/2)
-                     .attr("cy",d=>y(data[1][d]))
-                     .attr("r","3px")
-                     .attr("fill","steelblue");     
-
-                projGroup.append("text")
-                     .attr("x",d=>x(d)+x.bandwidth()/2)
-                     .attr("y",d=>y(data[1][d]))
-                     .text((d)=>data[1][d])
-                     .attr("fill","orange")
+                     .attr("fill","#000")
                      .attr("dy","-10px")
                      .style("font-size","12px");
                 
