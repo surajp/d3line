@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="d3.min.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <svg id="chart"></svg>
+        <script>
+            var dt;
+            var width=960,height=800;
+            var margin={top:20,right:20,left:40,bottom:20};
+            var x=d3.scaleBand().padding([0.1]).rangeRound([0,width]);
+            var y=d3.scaleLinear().range([0,height]);
+            d3.csv('actuals.csv',(data)=>{
+                x.domain(data.columns);
+                y.domain([d3.max(data.columns,(col,i)=>data[0][col]),0]);
+                var chart = d3.select("#chart")
+                              .attr("width",width+margin.left+margin.right)
+                              .attr("height",height+margin.top+margin.bottom)
+                              .append("g")
+                              .attr("transform","translate("+margin.left+","+margin.top+")");
+                var xaxis = d3.axisBottom(x);
+                var yaxis = d3.axisLeft(y);
+                chart.append("g").attr("class","x axis")
+                     .attr("transform","translate(0,"+height+")")
+                     .call(xaxis);
+                chart.append("g").attr("class","y axis")
+                     .call(yaxis);
+                var line = d3.line().y(col=>y(data[0][col])).x(d=>x(d));
+                chart.append("path").datum(data.columns)
+                     .attr("d",line).attr("fill","none")
+                     .attr("stroke","steelblue");
+                chart.selectAll("circle")
+                     .data(data.columns).enter()
+                     .append("circle")
+                     .attr("x",d=>x(d))
+                     .attr("y",d=>y(data[0][d]))
+                     .attr("r","4px")
+                     .attr("fill","steelblue");
+                     
+                
+            })
+        </script
+    </body>
+</html>
