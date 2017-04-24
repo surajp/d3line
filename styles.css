@@ -1,0 +1,29 @@
+.actualsline{
+    fill: none;
+    stroke: #252984;
+}
+
+.projline{
+    fill: none;
+    stroke: #F56817;
+}
+
+.actualscircle{
+    fill:steelblue;
+}
+
+.projcircle{
+    fill:steelblue;
+}
+
+.actualstext{
+    font-size: 12px;
+    font-weight: bold;
+    fill: #252984;
+}
+
+.projtext{
+    font-size: 12px;
+    font-weight: bold;
+    fill: #F56817;
+}
